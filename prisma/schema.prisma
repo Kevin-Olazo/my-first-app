@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Changed to capitalize and singular
+model Product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  imageUrl    String
+  name        String
+  price       Int
+  stock       Int
+  // Added properties, created and updated times
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Connect to the "products" collection in MongoDB
+  @@map("products")
+}
