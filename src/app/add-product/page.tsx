@@ -1,3 +1,7 @@
+export const metadata = {
+  title: "Add product",
+};
+
 const AddProductPage = () => {
   return (
     <div>
