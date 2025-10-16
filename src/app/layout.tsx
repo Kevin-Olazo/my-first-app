@@ -19,9 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="cupcake">
+    <html lang="en" data-theme="nord">
       <body className={`${rubik.className} antialiased`}>
-        <main className="p-4 max-w-7xl m-auto min-w-[320]">{children}</main>
+        <main className="p-4 max-w-7xl m-auto min-w-[320] bg-secondary">
+          {children}
+        </main>
       </body>
     </html>
   );
