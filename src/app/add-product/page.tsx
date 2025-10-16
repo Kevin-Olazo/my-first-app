@@ -24,7 +24,7 @@ async function createProduct(formData: FormData) {
     data: { name, description, imageUrl, price, stock },
   });
 
-  redirect("/");
+  redirect("/add-product");
 }
 
 const AddProductPage = () => {
