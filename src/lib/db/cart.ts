@@ -9,6 +9,10 @@ export type CartWithProducts = Prisma.CartGetPayload<{
   include: { items: { include: { product: true } } };
 }>;
 
+export type CartItemWithProduct = Prisma.CartItemGetPayload<{
+  include: { product: true };
+}>;
+
 // ShoppingCart
 // Hereda todo de CartWithProducts
 // Y Añade dos campos calculados que no existen en al base de datos:
