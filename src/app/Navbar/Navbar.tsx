@@ -1,5 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+
+async function searchProducts(formData: FormData) {
+  "use server";
+
+  const searchQuery = formData.get("searchQuery")?.toString();
+
+  if (searchQuery) {
+    redirect("/search?query=" + searchQuery);
+  }
+}
 
 export default function Navbar() {
   return (
@@ -31,7 +41,7 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="flex-none gap-2">
-          <form action="">
+          <form action={searchProducts}>
             <div className="flex flex-col">
               <input
                 name="searchQuery"
@@ -41,7 +51,20 @@ export default function Navbar() {
             </div>
           </form>
         </div>
-        <div>Ingresar</div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
       </div>
     </div>
   );
