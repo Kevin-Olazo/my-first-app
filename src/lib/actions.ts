@@ -10,7 +10,6 @@ export async function incrementProductQuantity(productId: string) {
   const cart = (await getCart()) ?? (await createCart());
 
   // Check if item it's already in the cart
-
   const articleInCart = cart.items.find((item) => item.productId === productId);
 
   // If article exists, update the quantity instead of adding same article
@@ -30,5 +29,5 @@ export async function incrementProductQuantity(productId: string) {
     });
   }
 
-  revalidatePath("/products/[id]");
+  revalidatePath(`/products/${productId}`);
 }
