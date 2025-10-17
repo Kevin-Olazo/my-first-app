@@ -1,5 +1,7 @@
+import { getCart } from "@/lib/db/cart";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import ShoppingCartButton from "./ShoppingCartButton";
 
 async function searchProducts(formData: FormData) {
   "use server";
@@ -11,7 +13,10 @@ async function searchProducts(formData: FormData) {
   }
 }
 
-export default function Navbar() {
+export default async function Navbar() {
+  // Get cart
+  const cart = await getCart();
+
   return (
     <div className="bg-base-100">
       <div className="navbar max-w-7xl m-auto flex-col sm:flex-row gap-2">
@@ -51,20 +56,7 @@ export default function Navbar() {
             </div>
           </form>
         </div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-          />
-        </svg>
+        <ShoppingCartButton cart={cart} />
       </div>
     </div>
   );
