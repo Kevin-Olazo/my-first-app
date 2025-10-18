@@ -38,7 +38,11 @@ export default function CartEntry({
           <div>Price: {formatPrice(product.price)}</div>
           <div className="my-1 flex items-center gap-2">
             Quantity:
-            <select className="w-full max-w-[80px] rounded-lg select">
+            <select
+              className="w-full max-w-[75px] rounded-lg select"
+              defaultValue={quantity}
+              onChange={(e) => {}}
+            >
               {quantityOptions}
             </select>
           </div>
@@ -48,12 +52,6 @@ export default function CartEntry({
         </div>
       </div>
       <div className="divider" />
-      <select className="select">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
     </div>
   );
 }
