@@ -3,6 +3,7 @@
 import { Session } from "next-auth";
 import Image from "next/image";
 import profilePicPlaceholder from "@/assets/profile-pic-placeholder.png";
+import { signIn, signOut } from "next-auth/react";
 
 interface UserMenuButtonProps {
   session: Session | null;
@@ -13,35 +14,37 @@ export default function UserMenuButton({ session }: UserMenuButtonProps) {
 
   return (
     <div className="dropdown dropdown-end">
-      <label tabIndex={0} className="btn btn-ghost">
-        {user ? (
+      {/* 1. This label is the dropdown trigger and makes the image clickable */}
+      <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+        {/* 2. This div ensures the image is correctly rounded */}
+        <div className="w-10 rounded-full">
           <Image
             src={user?.image || profilePicPlaceholder}
             alt="Profile Picture"
             width={40}
             height={40}
-            className="w-10 rounded-full"
           />
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block h-5 w-5 stroke-current"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-            />
-          </svg>
-        )}
+        </div>
       </label>
+
+      {/* 3. This ul is the dropdown menu content */}
       <ul
         tabIndex={0}
-        className="dropdown menu rounded-box menu-sm z-30 mt-3 w-52 bg-base-100 p-2 shadow"
-      ></ul>
+        className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+      >
+        {/* 4. The logic is moved inside the menu items (li) */}
+        {user ? (
+          <li>
+            <button onClick={() => signOut({ callbackUrl: "/" })}>
+              Sign Out
+            </button>
+          </li>
+        ) : (
+          <li>
+            <button onClick={() => signIn()}>Sign In</button>
+          </li>
+        )}
+      </ul>
     </div>
   );
 }
