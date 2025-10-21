@@ -3,6 +3,7 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer";
+import SessionProvider from "./SessionProvider";
 
 const rubik = Rubik({
   subsets: ["latin"], // Specify the desired subsets
@@ -23,9 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="nord">
       <body className={`${rubik.className} antialiased bg-secondary`}>
-        <Navbar />
-        <main className="p-4 max-w-7xl m-auto min-w-[320] ">{children}</main>
-        <Footer />
+        <SessionProvider>
+          <Navbar />
+          <main className="p-4 max-w-7xl m-auto min-w-[320] ">{children}</main>
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );
