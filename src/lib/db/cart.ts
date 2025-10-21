@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 import { Cart, Prisma } from "@/generated/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 // Tipos de datos
 // Utiliza Prisma.CartGetPayLoad para crear un tipo  que coincide EXACTAMENTE
@@ -28,14 +30,25 @@ export type ShoppingCart = CartWithProducts & {
 // ShoppingCart representa los datos enriquecidos que usará tu aplicación.
 
 export async function getCart(): Promise<ShoppingCart | null> {
+  const session = await getServerSession(authOptions);
+
+  let cart: CartWithProducts | null = null;
+
+  if (session) {
+    cart = await prisma.cart.findFirst({
+      where: { userID: session.user.id },
+      include: { items: { include: { product: true } } },
+    });
+  } else {
+    const localCartId = (await cookies()).get("localCartId")?.value;
+    cart = localCartId
+      ? await prisma.cart.findUnique({
+          where: { id: localCartId },
+          include: { items: { include: { product: true } } },
+        })
+      : null;
+  }
   // La lógica para obtener el ID de la cookie y buscar en la BD es la misma.
-  const localCartId = (await cookies()).get("localCartId")?.value;
-  const cart = localCartId
-    ? await prisma.cart.findUnique({
-        where: { id: localCartId },
-        include: { items: { include: { product: true } } },
-      })
-    : null;
 
   // Si no se encontró un carrito en la base de datos, devuelve null.
   if (!cart) {
@@ -62,14 +75,23 @@ export async function getCart(): Promise<ShoppingCart | null> {
 }
 
 export async function createCart(): Promise<ShoppingCart> {
-  // La creación del carrito en la base de datos es la misma.
-  const newCart = await prisma.cart.create({
-    data: {},
-  });
+  const session = await getServerSession(authOptions);
 
-  // Use cookies for cart
-  // Note: Needs encryption + secure settings in real production application
-  (await cookies()).set("localCartId", newCart.id);
+  let newCart: Cart;
+
+  if (session) {
+    newCart = await prisma.cart.create({
+      data: { userID: session.user.id },
+    });
+  } else {
+    // La creación del carrito en la base de datos es la misma.
+    newCart = await prisma.cart.create({
+      data: {},
+    });
+    // Use cookies for cart
+    // Note: Needs encryption + secure settings in real production application
+    (await cookies()).set("localCartId", newCart.id);
+  }
 
   // DEVUELVE UN OBJETO 'ShoppingCart'
   // Un carrito nuevo está vacío, por lo que los valores son predecibles.
